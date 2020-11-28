@@ -9,12 +9,6 @@ resource "aws_security_group" "sg-dev" {
     protocol    = "tcp"
     cidr_blocks = [element(var.white_listed_entrants, 0), element(var.white_listed_entrants, 1)]
   }
-   ingress {
-    from_port   = 8080
-    to_port     = 8080
-    protocol    = "tcp"
-    cidr_blocks = [element(var.white_listed_entrants, 0), element(var.white_listed_entrants, 1)]
-  }
   ingress {
     from_port   = 443
     to_port     = 443
