@@ -1,0 +1,24 @@
+---
+- name: Git checkout
+  git:
+    repo: 'https://github.com/seunsmooth/finalproject1_2020.git'
+    dest: /tmp/developer_code
+
+- name: Build an image and push it to a private repo
+  docker_image:
+    build: 
+      path:  /tmp/developer_code  
+    tag: v1
+    source: build
+    name: seunvotingapp
+
+- name: Create container
+  docker_container:
+    name: app
+    image: seunvotingapp:v1
+    state: started
+    ports: 
+    - "81:80"
+    tty: true
+    detach: yes
+    

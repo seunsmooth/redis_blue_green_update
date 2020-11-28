@@ -1,0 +1,10 @@
+[map_blue_server]
+34.244.201.97 ansible_user=ubuntu
+
+all:
+  hosts:
+    inv:
+      ansible_connection: ssh
+      ansible_user: oawoga # Remote user
+      ansible_host: 192.168.0.65 # Remote host
+      ansible_port: 22

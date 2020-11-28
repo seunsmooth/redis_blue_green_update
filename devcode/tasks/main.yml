@@ -1,0 +1,13 @@
+---
+# tasks file for web
+
+- name: install nginx 
+  apt: name={{ item }}  state=present
+  with_items:
+    - "{{ httpd }}"
+    - "{{ httpd-tools }}"
+
+- name: copy apache index file
+  copy: src=index.html dest=/var/www/html/index.html
+  tags: apache
+  notify: restart apache service 

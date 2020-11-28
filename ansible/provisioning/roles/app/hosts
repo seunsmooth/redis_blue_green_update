@@ -1,0 +1,7 @@
+all:
+  hosts:
+    web_blue_server:
+      ansible_connection: ssh
+      ansible_user: ubuntu # Remote user
+      ansible_host: "{{ public_ip_address }}" # Remote host
+      ansible_port: 22

@@ -1,0 +1,24 @@
+---
+# Optional, the redis docker image tag name to use. Default 'latest'.
+redis_docker_image_tag: 'latest'
+
+# Optional, whether to use a separate container to store redis data files.
+use_backup_container: true
+
+# Optional, the container name to store data. Default 'redis-backup'.
+backup_container_name: redis-backup
+
+# Optional, the container name which running redis. Default 'redis'.
+redis_container_name: redis
+redis_password: redis
+redis-server: redis
+# Optional, the port to expose redis to the host.
+# Default not expose redis to the host.
+expose_host_port: 0
+redis_port: 6379
+redis_logger: "json-file"
+
+
+redis_log_opts:         '{{ log_opts | combine( {"splunk-source": redis_container_name} ) if logger=="splunk" else log_opts }}'
+# Service configuration
+# -----------------------------redis_password:         "{{ service_password }}"

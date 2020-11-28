@@ -1,0 +1,4 @@
+---
+# vars file for wangsha.docker-redis
+redis_container_name: redis
+redis_password: redis
