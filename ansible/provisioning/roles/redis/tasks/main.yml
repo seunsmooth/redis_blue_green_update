@@ -4,7 +4,7 @@
      image: redis
      state: present
      volumes:
-       - /data
+      - /data
      command: "true"
    when: use_backup_container
  

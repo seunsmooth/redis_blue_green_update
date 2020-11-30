@@ -1,4 +1,9 @@
 ---
+- name: Ensure python3-docker package is installed
+  apt:
+    name: python3-docker
+    state: present
+    update_cache: True
 - name: Git checkout
   git:
     repo: 'https://github.com/seunsmooth/finalproject1_2020.git'
@@ -12,13 +17,16 @@
     source: build
     name: seunvotingapp
 
-- name: Create container
-  docker_container:
-    name: app
-    image: seunvotingapp:v1
-    state: started
-    ports: 
-    - "81:80"
-    tty: true
-    detach: yes
+- name: "state docker app"
+  shell: "docker run -d -p 81:80 --name myvoting -e REDIS_PORT=6379 -e REDIS_PWD={{ redis_password }}  -e REDIS={{ ansible_host }} --name awogavotingapp seunvotingapp:v1"
+
+#- name: Create container
+#  docker_container:
+#    name: app
+#    image: seunvotingapp:v1
+#    state: started
+#    ports: 
+#    - "81:80"
+#    tty: true
+#    detach: yes
     

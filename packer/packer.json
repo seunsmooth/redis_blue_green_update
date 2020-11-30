@@ -6,7 +6,7 @@
     "builders": [
       {
         "type": "amazon-ebs",
-        "region": "eu-west-2",
+        "region": "eu-west-1",
         "associate_public_ip_address": true,
 
         "source_ami_filter" : {

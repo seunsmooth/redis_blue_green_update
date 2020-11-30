@@ -46,6 +46,9 @@
     update_cache: yes
   tags:
     - docker
+- include_tasks: main.yml
+  tags:
+    - "docker"
  
 # sudo apt-get install docker-ce=18.03.*
 - name: Install docker

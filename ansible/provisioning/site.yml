@@ -4,22 +4,7 @@
   vars:  
     ansible_user: ubuntu 
     ansible_ssh_private_key_file: /Users/oawoga/play/redis_blue_green/ansible/inventory/test20.pem
-     
-- name: apply nginx configuration 
-  hosts: map_blue_Server
-  vars:
-    - ansible_host: "{{ public_ip_address }}"
-    - ansible_user: ubuntu
-  become: yes
-  roles:
-    - nginx
-  pre_tasks:
-    - name: update apt cache if needed
-      become: yes
-      apt:
-        update_cache=yes
-        cache_valid_time=3600
-        
+  
 - name: apply redis configuration 
   hosts: map_blue_Server
   vars:
@@ -27,27 +12,22 @@
     - ansible_user: ubuntu
   become: yes
   roles:
-   #- redis 
-
-- name: apply and build developer code into docker and configure
-  hosts: map_blue_Server
-  vars:
+    - redis
+    
+- name: apply app configuration 
+  hosts:  map_blue_Server
+  become: yes
+  vars:  
     - ansible_host: "{{ public_ip_address }}"
     - ansible_user: ubuntu
-  become: yes
   roles:
-   # - app
-  tasks:
-    - name: "state docoker app"
-      shell: "docker run -d -p 82:80 --name myvoting -e REDIS_PORT=6379 -e REDIS_PWD={{ redis_password }}  -e REDIS={{ ansible_host }} --name awogavotingapp seunvotingapp:v1"
-        
+    - app
+  
 - name: Build prometheus and grafana dashboard configuration 
   hosts: map_blue_Server
   vars:
     - ansible_host: "{{ public_ip_address }}"
     - ansible_user: ubuntu
-  become: yes
-   
   roles:
-    #- monitoring
+    - grafana
    

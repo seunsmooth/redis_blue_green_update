@@ -1,9 +1,0 @@
----
-# Variables listed here are applicable to "setup" role
- 
-ansible_python_interpreter: /usr/bin/python3
- 
-remote_user: oawoga
-docker_group: docker
- 
-docker_remote_app_dir: /tmp/helloworld

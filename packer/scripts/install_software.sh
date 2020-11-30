@@ -8,11 +8,11 @@ sudo mv packer /usr/local/bin/packer
 sudo wget https://releases.hashicorp.com/terraform/0.12.25/terraform_0.12.25_linux_amd64.zip
 sudo unzip terraform_0.12.25_linux_amd64.zip
 sudo mv terraform /usr/local/bin/
+sudo apt-get install -y ansible
 
-
-sudo yum update -y
-sudo yum install -y docker
-sudo usermod -aG docker ec2-user
+sudo apt-get update -y
+sudo apt-get install -y docker.io
+sudo usermod -aG docker ubuntu
 sudo service docker start
 sudo chkconfig docker on
 sudo docker run -d  --name grafana  -p 3000:3000  grafana/grafana
