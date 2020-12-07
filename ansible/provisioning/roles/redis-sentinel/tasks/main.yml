@@ -1,0 +1,23 @@
+---
+- name: "state docker app"
+  become: yes
+  shell: docker rm -f $(docker ps -aq) 
+  
+- name: "state docker app"
+  become: yes
+  shell: apt install python-docker -y
+
+- name: ansible create directory with mode setting example
+  file:
+    path: /etc/redis
+    state: directory
+    mode: "u=rw,g=wx,o=rwx"
+
+- include_tasks: install_redis_master.yml
+  tags:
+    - "Redis-Cluster"
+
+- include_tasks: install_redis_slave.yml
+  tags:
+    - "Redis-Cluster"
+

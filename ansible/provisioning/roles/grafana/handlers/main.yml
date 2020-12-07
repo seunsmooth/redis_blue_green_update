@@ -2,6 +2,7 @@
 # handlers file for prometheus-docker
 
 - name: Restart prometheus container
+  become: yes
   docker_container:
       name: "{{ prometheus_container_name }}"
       image: "{{ prometheus_image }}"

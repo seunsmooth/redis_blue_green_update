@@ -1,2 +1,3 @@
 ---
 # defaults file for web
+app_cleanup_dead_containers: yes

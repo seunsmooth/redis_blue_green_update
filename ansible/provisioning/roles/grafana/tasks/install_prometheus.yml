@@ -31,6 +31,7 @@
     - Restart prometheus container
     - Restart grafana container
 - name: Start prometheus container
+  become: yes
   docker_container:
     name: "{{ prometheus_container_name }}"
     hostname: "{{ prometheus_container_name }}"

@@ -1,46 +1,80 @@
 ---
+# tasks file for nginx
 
-- name: Obtain base image and create a container out of it
-  command: 'buildah from --name {{ container_name }} docker://{{ image }}'
-  become: true 
-  when: container_engine == 'buildah'  
-  block:
-- name: Make the base image available locally 
+- name: Install aptitude using apt
+  apt: 
+    name: aptitude 
+    state: latest
+    update_cache: yes 
+    force_apt_get: yes
+
+- name: Install required system packages
+  apt:
+   name: "{{ item }}"
+   state: latest 
+   update_cache: yes
+  loop: [ 'apt-transport-https', 'ca-certificates', 'curl', 'software-properties-common', 'python3-pip', 'virtualenv', 'python3-setuptools']
+
+- name: Add Docker GPG apt Key
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+
+- name: Add Docker Repository
+  apt_repository:
+   repo: deb https://download.docker.com/linux/ubuntu xenial stable
+   state: present
+
+- name: Update apt and install docker-ce
+  apt: 
+   update_cache: yes 
+   name: docker-ce 
+   state: latest
+
+- name: Install Docker Module for Python
+  pip:
+    name: docker
+
+- name: Pull default Docker image
   docker_image:
-    name: '{{ image }}' 
- 
-- name: Create the container 
+    name: "{{ default_container_image }}"
+    source: pull
+
+- name: Set up nginx directories
+  file:
+    path: "/etc/nginx/{{ item }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+  with_items:
+    - sites-available
+    - sites-enabled
+
+- name: Add Nginx config file
+  template:
+    src:  nginx.conf.j2
+    dest: /etc/nginx/nginx.conf
+    mode: 0755
+    owner: root
+    group: root
+
+- name: Add Nginx reverse-config file
+  template:
+    src: reverse_proxy.conf.j2
+    dest: /etc/nginx/sites-available/reverse_proxy.conf
+    mode: 0755
+    owner: root
+    group: root
+
+- name: Install Nginx
   docker_container:
-      image: '{{ image }}'
-      name: '{{ container_name }}'  
-      command: sleep infinity
-  when: container_engine == 'docker'
-
-- name: Add the newly created container to the inventory 
-  add_host:
-      hostname: '{{ container_name }}'
-      ansible_connection: '{{ container_engine }}'
-      ansible_python_interpreter: /usr/bin/python3  # fedora container doesn't ship python2
-
-- name: Run the role in the container  
-  delegate_to: '{{ container_name }}'
-  include_role:
-    name: sample-nginx
-  block:
-- name: Change default command of the container image      
-  command: 'buildah config --cmd "nginx -g \"daemon off;\"" {{ container_name }}'
-
-- name: Commit the container and make it an image
-  command: 'buildah commit --rm {{ container_name }} docker-daemon:{{ image_name }}:latest'
-  when: container_engine == 'buildah'
-  block:
-- name: Commit the container and make it an image  
-  command: docker commit \
-    -c 'CMD ["nginx", "-g", "daemon off;"]' \
-   {{ container_name }} {{ image_name }}
-
-- name: Remove the container
-  docker_container:
-    name: '{{ container_name }}'
-    state: absent
-    when: container_engine == 'docker'
+    name: nginx
+    image: nginx
+    detach: true
+    tty: true
+    ports:
+      - 8080:80
+    volumes:
+        - /etc/nginx/:/etc/nginx/
+        - /etc/nginx/sites-enabled/:/etc/nginx/sites-available/

@@ -1,0 +1,10 @@
+---
+- name: Configure
+  template: src=sentinel.conf.j2  dest=/etc/redis/sentinel.conf mode=0777
+  when: inventory_hostname == "nginx_Server"
+
+- name: Destroy redis-sentinel
+  docker_container:
+    name: redis-sentinel
+    image: bitnami/redis-sentinel
+    state: absent

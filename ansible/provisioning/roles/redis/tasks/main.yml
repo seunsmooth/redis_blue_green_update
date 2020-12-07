@@ -15,8 +15,8 @@
      command: ["redis-server", "--requirepass {{ redis_password }}"]
      state: started
      expose:
-      - 6379
+      - "6380"
      ports: 
-       - 6379:6379
+       - "6380:6379"
      volumes_from:
        - redis-data

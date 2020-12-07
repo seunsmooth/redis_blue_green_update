@@ -1,0 +1,6 @@
+docker:
+  restart_policy: on-failure
+  restart: unless-stopped
+  pull: always
+  state: started
+

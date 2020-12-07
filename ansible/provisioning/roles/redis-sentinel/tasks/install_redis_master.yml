@@ -1,0 +1,31 @@
+--- 
+
+- name: Configure
+  template: 
+     src: master.conf.j2  
+     dest: /etc/redis/redis.conf 
+     mode: 0777
+
+- name: data container
+  docker_container:
+     name: redis-data
+     image: redis
+     state: present
+     volumes:
+      - /data
+     command: "true"
+ 
+- name: redis container
+  docker_container:
+     name: redis-master
+     image: redis
+     command: ["redis-server", "--requirepass {{ redis_password }}"]
+     state: started
+     expose:
+      - "6379"
+     ports: 
+       - "6379:6379"
+     volumes_from:
+       - redis-data
+
+

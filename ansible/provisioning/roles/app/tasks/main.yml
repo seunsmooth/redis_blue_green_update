@@ -1,5 +1,21 @@
 ---
+- name: cleanup dead containers workaround
+  include_tasks: cleanup_dead_containers.yml
+  when: app_cleanup_dead_containers
+
+- name: query for dead containers
+  command: docker ps -a -q -f status=dead
+  register: _app_dead_containers
+  changed_when: False
+  tags:
+    - skip_ansible_lint
+
+- name: "state docker app"
+  become: yes
+  shell: apt install python-docker -y
+  
 - name: Ensure python3-docker package is installed
+  become: yes
   apt:
     name: python3-docker
     state: present
@@ -13,12 +29,12 @@
   docker_image:
     build: 
       path:  /tmp/developer_code  
-    tag: v1
+    tag: v2
     source: build
     name: seunvotingapp
 
-- name: "state docker app"
-  shell: "docker run -d -p 81:80 --name myvoting -e REDIS_PORT=6379 -e REDIS_PWD={{ redis_password }}  -e REDIS={{ ansible_host }} --name awogavotingapp seunvotingapp:v1"
+- name: "start docker app"
+  shell: "docker run -d -p 82:80 --name redis -e REDIS_PORT=6379 -e REDIS_PWD={{ redis_password }}  -e REDIS={{ public_ip_address }} --name awogavotingapp2 seunvotingapp:v2"
 
 #- name: Create container
 #  docker_container:
@@ -29,4 +45,3 @@
 #    - "81:80"
 #    tty: true
 #    detach: yes
-    

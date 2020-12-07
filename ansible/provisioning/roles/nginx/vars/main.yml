@@ -1,8 +1,11 @@
 ---
-# vars file for web
+# vars file for nginx
+
+default_container_image: nginx
 
 ansible_python_interpreter: /usr/bin/python3
 docker_group: docker
 redis_container_name: redis
 redis_password: redis
 ansible_hosts: blue_Server
+ansible_user:  ubuntu

@@ -1,0 +1,21 @@
+--- 
+- name: Configure
+  template: 
+     src: slave.conf.j2  
+     dest: /etc/redis/redis.conf 
+     mode: 0777
+- name: slave redis container
+  docker_container:
+     name: redis-slave
+     image: redis
+     command: "redis-server"
+     state: started
+     expose:
+      - "6380"
+     ports: 
+       - "6380:6379"
+     volumes_from:
+       - redis-data
+
+- name: Configure slave replication
+  shell: docker exec -it redis-master redis-cli slaveof redis-master 6379
