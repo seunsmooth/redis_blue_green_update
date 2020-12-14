@@ -3,6 +3,7 @@ plugin: aws_ec2
 boto_profile: oawoga
 regions:
   - eu-west-1
+
 filters:
   instance-state-name: "running"
   #tag:Environment:
@@ -10,9 +11,22 @@ filters:
 hostnames:
   - tag:Name
   - ip-address
-  - public-ip-address
+  #- public-ip-address
   #- dns-name
 strict permission: False
 compose:
   #ansible_host: public_ip_address 
   ansible_host:  private_ip_address
+  ansible_user: "ubuntu"
+  ansible_python_interpreter: /usr/bin/python3
+  ansible_ssh_private_key_file: /Users/oawoga/play/redis_blue_green_update/terraform/olukey
+group_name:
+  frontend:
+    tags: 
+      kind: nginx
+  backend:
+    tags:
+      kind: app
+  database:
+    tags:
+      kind: redi_Server

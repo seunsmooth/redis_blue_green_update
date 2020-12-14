@@ -4,16 +4,18 @@
   become: yes
   vars:
     ansible_user: ubuntu 
+    ansible_python_interpreter: /usr/bin/python3
     ansible_ssh_private_key_file: /Users/oawoga/play/redis_blue_green_update/terraform/olukey
 
 - name: apply nginx configuration 
   hosts: nginx_Server
   vars:
-    - ansible_host: "{{ public_ip_address }}"
-    - ansible_user: ubuntu
+    ansible_host: "{{ public_ip_address }}"
+    ansible_user: ubuntu
+    ansible_python_interpreter: /usr/bin/python3
   become: yes
-  roles:
-   - nginx
+  roles: 
+    - nginx
 
 - name: docker setup dashboard configuration 
   become: yes
@@ -23,20 +25,31 @@
     - ansible_user: ubuntu
     - ansible_ssh_private_key_file: /Users/oawoga/play/redis_blue_green_update/terraform/olukey
   roles:
+    - docker_setup
     - redis-sentinel
-  
-- name: apply redis configuration 
+    
+- name: install app on blue Server configuration 
   hosts: 
-    - blue_Server
-    - green_Server
+    - blue_Server 
   vars:
     - ansible_host: "{{ public_ip_address }}"
     - ansible_user: ubuntu
   become: yes
   roles:
-   - redis
-   - docker_setup
-   - app
+    - docker_setup
+    - app
+
+- name: install app on green Server configuration 
+  hosts: 
+    - green_Server 
+  vars:
+    - ansible_host: "{{ public_ip_address }}"
+    - ansible_user: ubuntu
+  become: yes
+  roles:
+     - docker_setup
+     - app
+  
   
 - name: apply app configuration 
   hosts:  jenkins_Server
@@ -49,12 +62,7 @@
    - grafana
    
     
-- name: Build prometheus and grafana dashboard configuration 
-  hosts: jenkins_Server
-  vars:
-    - ansible_host: "{{ public_ip_address }}"
-    - ansible_user: ubuntu
-  roles:
+
    
 
 

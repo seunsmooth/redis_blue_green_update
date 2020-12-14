@@ -20,6 +20,7 @@
      name: redis-master
      image: redis
      command: ["redis-server", "--requirepass {{ redis_password }}"]
+     #command: "redis-server"
      state: started
      expose:
       - "6379"

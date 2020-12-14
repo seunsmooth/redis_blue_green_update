@@ -1,25 +1,68 @@
 ---
-- name: cleanup dead containers workaround
-  include_tasks: cleanup_dead_containers.yml
-  when: app_cleanup_dead_containers
+##- name: "state docker app"
+  #become: yes
+#  shell: docker rm -f $(docker ps -aq) 
+- name: install pip3
+  become: true
+  apt: 
+    name: ['python3-pip' , ' python-pip']
+    state: present
+    update_cache: yes 
+    force_apt_get: yes
 
-- name: query for dead containers
-  command: docker ps -a -q -f status=dead
-  register: _app_dead_containers
-  changed_when: False
-  tags:
-    - skip_ansible_lint
+- name: Install Docker Module for Python
+  pip:
+   name: docker
 
-- name: "state docker app"
-  become: yes
-  shell: apt install python-docker -y
-  
+- name: Install aptitude using apt
+  apt: 
+    name: aptitude 
+    state: latest
+    update_cache: yes 
+    force_apt_get: yes
+
+- name: Install required system packages
+  apt:
+   name: "{{ item }}"
+   state: latest 
+   update_cache: yes
+  loop: [ 'apt-transport-https', 'ca-certificates', 'curl', 'software-properties-common', 'python3-pip', 'virtualenv', 'python3-setuptools']
+
+- name: Add Docker GPG apt Key
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+
+- name: Update apt and install docker-ce
+  apt: 
+    update_cache: yes 
+    name: docker-ce 
+    state: latest
+
+- name: Set the stable docker repository
+  apt_repository: 
+    repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_lsb.codename }} edge"
+    state: present
+    update_cache: yes
+
+- name: Ensure docker users are installed 
+  become: true
+  shell: "sudo usermod -aG docker $USER"
+
 - name: Ensure python3-docker package is installed
   become: yes
   apt:
     name: python3-docker
     state: present
     update_cache: True
+
+- name: "state docker app"
+  become: yes
+  shell: apt install python-docker -y
+
+- name: Ensure docker users are installed 
+  shell: "sudo usermod -aG docker $USER"
+
 - name: Git checkout
   git:
     repo: 'https://github.com/seunsmooth/finalproject1_2020.git'
@@ -34,8 +77,8 @@
     name: seunvotingapp
 
 - name: "start docker app"
-  shell: "docker run -d -p 82:80 --name redis -e REDIS_PORT=6379 -e REDIS_PWD={{ redis_password }}  -e REDIS={{ public_ip_address }} --name awogavotingapp2 seunvotingapp:v2"
-
+  shell: "docker run -d -p 82:80 --name redis -e REDIS_PORT=6379 -e REDIS_PWD={{ redis_password }}  -e REDIS=52.208.249.107 --name awogavotingapp2 seunvotingapp:v2"
+  ignore_errors: yes
 #- name: Create container
 #  docker_container:
 #    name: app

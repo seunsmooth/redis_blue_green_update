@@ -1,3 +1,5 @@
+  GNU nano 2.9.3                                   default.conf                                   Modified  
+
 server {
         listen 80;
         listen [::]:80;
@@ -5,11 +7,12 @@ server {
         access_log /var/log/nginx/reverse-access.log;
         error_log /var/log/nginx/reverse-error.log;
 
-        location /app {
-                    proxy_pass http://54.76.115.137:82;                  
+        location / {
+                    proxy_pass http://54.170.229.153:82;
   }
-   location /app1 {
-        proxy_pass   http://10.7.20.231:82;
-   }
+
+      # location / green {
+    #                proxy_pass http://green:82;
+ # }
 
 }

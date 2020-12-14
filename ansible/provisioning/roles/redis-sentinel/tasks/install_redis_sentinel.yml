@@ -8,3 +8,12 @@
     name: redis-sentinel
     image: bitnami/redis-sentinel
     state: absent
+ 
+#- name: redis-sentinel
+ # docker_container:  
+#    image: bitnami/redis-sentinel 
+ #   ports: 
+      - "26379:26379"
+ #   command: "redis-server /etc/sentinel.conf --sentinel"
+ #   volumes:
+ #      -  /sentinel.conf:/etc/sentinel.conf

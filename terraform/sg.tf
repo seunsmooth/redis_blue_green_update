@@ -15,6 +15,39 @@ resource "aws_security_group" "sg-dev" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  ingress {
+    from_port   = 82
+    to_port     = 82
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+ingress {
+    from_port   = 6379
+    to_port     = 6379
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+ingress {
+    from_port   = 6380
+    to_port     = 6380
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+ingress {
+    from_port   = 26379
+    to_port     = 26379
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+
   ingress {
     from_port   = 9090
     to_port     = 9090

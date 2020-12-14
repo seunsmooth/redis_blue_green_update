@@ -1,8 +1,49 @@
 ---
-- name: "state docker app"
-  become: yes
-  shell: docker rm -f $(docker ps -aq) 
-  
+
+- name: Install aptitude using apt
+  apt: 
+    name: aptitude 
+    state: latest
+    update_cache: yes 
+    force_apt_get: yes
+
+- name: Install required system packages
+  apt:
+   name: "{{ item }}"
+   state: latest 
+   update_cache: yes
+  loop: [ 'apt-transport-https', 'ca-certificates', 'curl', 'software-properties-common', 'python3-pip', 'virtualenv', 'python3-setuptools']
+
+- name: Add Docker GPG apt Key
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+
+- name: Add Docker Repository
+  apt_repository:
+   repo: deb https://download.docker.com/linux/ubuntu xenial stable
+   state: present
+
+- name: Update apt and install docker-ce
+  apt: 
+   update_cache: yes 
+   name: docker-ce 
+   state: latest
+
+#- name: Install Docker Module for Python
+  #pip:
+  #  name: docker
+
+- name: Pull default Docker image
+  docker_image:
+    name: docker
+    source: pull
+#- name: "state docker app"
+#  become: yes 
+#  shell: apt install -y pip3
+   
+
+
 - name: "state docker app"
   become: yes
   shell: apt install python-docker -y
@@ -20,4 +61,8 @@
 - include_tasks: install_redis_slave.yml
   tags:
     - "Redis-Cluster"
+
+#- include_tasks: install_redis_sentinel.yml
+#  tags:
+#    - "Redis-Cluster"
 
