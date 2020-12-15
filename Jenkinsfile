@@ -1,15 +1,28 @@
 pipeline {
     agent any
     stages {
-        stage('apply') {
-          environment {
-            AWS_ACCESS_KEY_ID = credentials('ACCESS_KEY')
-            AWS_SECRET_ACCESS_KEY = credentials('SECRET_KEY')
+        stage('Build') {
+            steps {
+                echo 'Building..'
+                sh ' rm -rf simpleweb'
+                sh 'git clone https://github.com/seunsmooth/simpleweb.git'
+            }
         }
-       steps {
-          sh 'terraform init'
-          sh 'terraform apply -auto-approve'
-         }
-      }
-   }
+        stage('build weather app Infrastructure') {
+            steps {
+                echo 'build Terraform infrastructure on AWS..'
+                sh  'terraform init && terraform apply -auto-approve'
+            }
+        }
+         stage('Test') {
+            steps {
+                echo 'Testing..'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo 'Deploying....'
+            }
+        }
+    }
 }
