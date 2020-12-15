@@ -4,11 +4,11 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building..'
-                sh ' rm -rf simpleweb'
-                sh 'git clone https://github.com/seunsmooth/simpleweb.git'
+                sh ' rm -rf redis_blue_green_update'
+                sh 'git clone https://github.com/seunsmooth/redis_blue_green_update.git'
             }
         }
-        stage('build weather app Infrastructure') {
+        stage('build  app Infrastructure') {
             steps {
                 echo 'build Terraform infrastructure on AWS..'
                 sh  'terraform init && terraform apply -auto-approve'
