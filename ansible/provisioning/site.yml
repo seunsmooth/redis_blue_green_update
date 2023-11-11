@@ -1,7 +1,7 @@
 ---
 - hosts: all
   gather_facts: no
-  become: yes
+  become: true
   vars:
     ansible_user: ubuntu 
     ansible_python_interpreter: /usr/bin/python3
@@ -13,7 +13,7 @@
     ansible_host: "{{ public_ip_address }}"
     ansible_user: ubuntu
     ansible_python_interpreter: /usr/bin/python3
-  become: yes
+  become: true
   roles: 
     - nginx
 
@@ -43,9 +43,9 @@
   hosts: 
     - green_Server 
   vars:
-    - ansible_host: "{{ public_ip_address }}"
-    - ansible_user: ubuntu
-  become: yes
+    ansible_host: "{{ public_ip_address }}"
+    ansible_user: ubuntu
+ 
   roles:
      - docker_setup
      - app
@@ -53,10 +53,10 @@
   
 - name: apply app configuration 
   hosts:  jenkins_Server
-  become: yes
+ 
   vars:  
-    - ansible_host: "{{ public_ip_address }}"
-    - ansible_user: ubuntu
+    ansible_host: "{{ public_ip_address }}"
+    ansible_user: ubuntu
   roles:
    - docker_setup
    - grafana

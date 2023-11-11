@@ -4,7 +4,7 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building..'
-                sh ' rm -rf redis_blue_green_update'
+                sh ' rm -rf techbleat_bg'
                 sh 'git clone https://github.com/seunsmooth/redis_blue_green_update.git'
             }
         }

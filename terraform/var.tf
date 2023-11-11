@@ -29,20 +29,6 @@ variable "public_subnets" {
   default = ["10.7.10.0/24", "10.7.20.0/24", "10.7.30.0/24"]
 }
 
-#ariable "subnet_id" {
-# default = "subnet-0ffbe71882deab7b5"
-#
-
-#ariable "seun_private_subnets" {
-# type = string
-# default = module.vpc.private_subnets[0]
-#
-#
-#ariable "seun_public_subnets" {
-# type = string
-# default = module.vpc.public_subnets[0]
-#
-
 variable "tags" {
   description = "A map of tags to add to all resources"
   type        = map(string)
@@ -54,10 +40,10 @@ variable "white_listed_entrants" {
 }
 
 variable "PATH_TO_PUBLIC_KEY" {
-  default = "olukey.pub"
+  default = "userkey.pub"
 }
 
 variable "PATH_TO_PRIVATE_KEY" {
-  default = "olukey"
+  default = "userkey"
 }
 

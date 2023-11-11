@@ -7,7 +7,7 @@ module "jenkins" {
 
   ami                    = var.AMI_ID
   instance_type          = "t2.micro"
-  key_name               = "olukey"
+  key_name               = ""
   monitoring             = true
   vpc_security_group_ids = [aws_security_group.sg-dev.id]
   subnet_id              = module.vpc.public_subnets[0]
